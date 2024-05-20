@@ -1,0 +1,26 @@
+{{>layouts/header}} <!-- 헤더 템플릿 가져오기  -->
+
+<!-- content -->
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Title</th>
+        <th scope="col">Content</th>
+    </tr>
+    </thead>
+    <tbody>
+<!-- 머스테치 문법 이중중괄호 이용 출력  #을 이용해 열고 /이용해 닫는다     -->
+<!--  article 넘어오는 데이터에 id , title , content 를 사용하겠다는 뜻 -->
+    {{#article}}
+    <tr>
+        <th>{{id}}</th>
+        <td>{{title}}</td>
+        <td>{{content}}</td>
+    </tr>
+    {{/article}}
+    </tbody>
+</table>
+
+
+{{>layouts/footer}} <!-- 푸터 템플릿 가져오기  -->
