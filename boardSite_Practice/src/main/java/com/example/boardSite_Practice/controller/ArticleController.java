@@ -1,6 +1,7 @@
 package com.example.boardSite_Practice.controller;
 
 import com.example.boardSite_Practice.model.dto.ArticleForm;
+import com.example.boardSite_Practice.model.dto.ArticleFormEdit;
 import com.example.boardSite_Practice.model.entity.Article;
 import com.example.boardSite_Practice.model.repository.ArticleRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +61,9 @@ public class ArticleController {
         // 2. run -> JDBC 검색 후 url="이후 복사 ＊단 user 부분 제외"
         // 3. JDBC URL : 붙여넣고 DB 시작
         
-        return "";
+        
+        // 글 쓴후 리다이렉트를 이용해 쓴글로 이동
+        return "redirect:/articles/" + saved.getId();
     } // m e
 
     // 개별 조회 요청 받기
@@ -94,6 +98,58 @@ public class ArticleController {
         // 3. 뷰 페이지 설정하기
         return "articles/index";
     }
+
+    // 글 수정페이지 요청
+    @GetMapping("/articles/{id}/edit")
+    public String edit(@PathVariable Long id , Model model){
+        // 수정할 데이터 가져오기
+        Article articleEntity = articleRepository.findById(id).orElse(null);
+        // 모델에 데이터 등록하기
+        model.addAttribute("article", articleEntity); // articleEntity를 article로 등록
+        // 뷰 페이지 리턴
+        return "articles/edit";
+    }
+
+    // 글 수정 기능
+    @PostMapping("/articles/update")
+    public String editUpdate(ArticleFormEdit articleFormEdit){
+        log.info(articleFormEdit.toString());
+        // 1. DTO를 엔티티로 변환
+        Article articleEntity = articleFormEdit.toEntity();
+        log.info(articleEntity.toString());
+        // 2. 리파지터리로 엔티티를 DB에 저장
+        // 2-1 DB에서 기존 데이터 가져오기
+        Article target = articleRepository.findById(articleFormEdit.getId()).orElse(null);
+        log.info("target" + target.toString());
+        // 2-2 기존 데이터 갱신
+        if (target != null){
+            articleRepository.save(articleEntity);
+        }else {
+            // 빈 값이라면 null 리턴
+            return null;
+        }
+        // 글 쓴후 리다이렉트를 이용해 쓴글로 이동
+        return "redirect:/articles/" + articleEntity.getId();
+    }
+
+    // 글 삭제 요청
+    @GetMapping("/articles/{id}/delete")
+    public String delete(@PathVariable Long id , RedirectAttributes rttr){
+        log.info("아이디 : "+ id +"삭제 요청이 들어왔습니다.");
+        // 1. 삭제할 대상 가져오기
+        Article target = articleRepository.findById(id).orElse(null);
+        // 2. 대상 엔티티 삭제하기
+        if (target != null){
+            // 타겟엔티티에 값이 들어있다면 삭제 진행
+            articleRepository.delete(target);
+            rttr.addFlashAttribute("msg","삭제되었습니다.");
+        }else {
+            return null;
+        }
+        // 3. 결과 페이지로 리다이렉트 하기
+        return "redirect:/articles";
+    }
+
 
 
 

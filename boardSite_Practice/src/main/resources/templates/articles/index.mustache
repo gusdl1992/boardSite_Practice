@@ -15,13 +15,15 @@
     <!--  데이터가 묶음일시 테이터 수만큼 반복 실행  -->
     {{#articleList}}
         <tr>
-            <th>{{id}}</th>
-            <td>{{title}}</td>
-            <td>{{content}}</td>
+                <th>{{id}}</th>
+                <td><a href="/articles/{{id}}">{{title}}</a></td>
+                <td>{{content}}</td>
         </tr>
     {{/articleList}}
     </tbody>
 </table>
+<br/>
+<a class="btn btn-primary" href="/articles/new">New Article</a>
 
 
 {{>layouts/footer}} <!-- 푸터 템플릿 가져오기  -->

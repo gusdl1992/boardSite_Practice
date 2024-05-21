@@ -1,0 +1,21 @@
+{{>layouts/header}} <!-- 헤더 템플릿 가져오기  -->
+
+<!-- content -->
+{{#article}}
+<form class="container" action="/articles/update" method="post">
+<!-- 식별번호 숨겨서 이동  -->
+    <input type="hidden" name="id" value="{{id}}">
+    <div class="mb-3">
+        <label class="form-label">제목</label>
+        <input type="text" class="form-control" name="title" value="{{title}}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">내용</label>
+        <textarea class="form-control" rows="3" name="content">{{content}}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <a class="btn btn-primary" href="/articles/{{id}}">Back</a>
+</form>
+{{/article}}
+
+{{>layouts/footer}} <!-- 푸터 템플릿 가져오기  -->
